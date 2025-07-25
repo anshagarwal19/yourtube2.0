@@ -52,7 +52,7 @@ const Videogrid = () => {
       {loading ? (
         <>Loading..</>
       ) : (
-        videos.map((video: any) => <Videocard key={video._id} video={video} />)
+        videos && Array.isArray(videos) ? videos.map((video: any) => <Videocard key={video._id} video={video} />) : <>No videos found</>
       )}
     </div>
   );
