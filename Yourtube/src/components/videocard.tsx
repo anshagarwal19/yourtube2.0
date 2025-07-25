@@ -11,7 +11,6 @@ export default function VideoCard({ video }: any) {
         <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
           <video
             src={`${process.env.BACKEND_URL}/${video?.filepaths?.["720p"]}`}
-            controls
             className="object-cover group-hover:scale-105 transition-transform duration-200"
           />
           <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1 rounded">
