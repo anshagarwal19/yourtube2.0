@@ -10,17 +10,17 @@ import React, { useEffect, useMemo, useState } from "react";
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [video, setVideo] = useState<any>(null);
-  const [videos, setVideos] = useState<any>(null);
+  const [videos, setvideo] = useState<any>(null);
+  const [video, setvide] = useState<any>(null);
   const [loading, setloading] = useState(true);
   useEffect(() => {
     const fetchvideo = async () => {
       if (!id || typeof id !== "string") return;
       try {
         const res = await axiosInstance.get("/video/getall");
-        const selectedVideo = res.data?.filter((vid: any) => vid._id === id);
-        setVideo(selectedVideo[0]);
-        setVideos(res.data);
+        const video = res.data?.filter((vid: any) => vid._id === id);
+        setvideo(video[0]);
+        setvide(res.data);
       } catch (error) {
         console.log(error);
       } finally {
