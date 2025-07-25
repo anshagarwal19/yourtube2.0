@@ -8,9 +8,10 @@ interface VideoPlayerProps {
     videotitle: string;
     filepaths: { [quality: string]: string };
   };
+  backendUrl?: string;
 }
 
-export default function VideoPlayer({ video }: VideoPlayerProps) {
+export default function VideoPlayer({ video, backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "" }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [selectedQuality, setSelectedQuality] = useState<string>("1080p");
 
@@ -21,25 +22,27 @@ export default function VideoPlayer({ video }: VideoPlayerProps) {
   });
 
   useEffect(() => {
-    if (videoRef.current && video.filepaths[selectedQuality]) {
-      videoRef.current.src = `${process.env.BACKEND_URL}/${video.filepaths[selectedQuality]}`;
+    if (videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play();
+      // Attempt to play video, catch errors silently
+      videoRef.current.play().catch(() => {});
     }
   }, [selectedQuality, video.filepaths]);
+
+  const videoSrc = backendUrl && video.filepaths[selectedQuality]
+    ? `${backendUrl}/${video.filepaths[selectedQuality]}`
+    : "";
 
   return (
     <div className="aspect-video bg-black rounded-lg overflow-hidden">
       <video
+        key={selectedQuality} // key to reload video on quality change
         ref={videoRef}
         className="w-full h-full"
         controls
         poster={`/placeholder.svg?height=480&width=854`}
       >
-        <source
-          src={`${process.env.BACKEND_URL}/${video.filepaths[selectedQuality]}`}
-          type="video/mp4"
-        />
+        {videoSrc && <source src={videoSrc} type="video/mp4" />}
         Your browser does not support the video tag.
       </video>
       <div className="mt-2 flex justify-center space-x-2">
@@ -52,6 +55,7 @@ export default function VideoPlayer({ video }: VideoPlayerProps) {
                 : "bg-gray-300 text-black"
             }`}
             onClick={() => setSelectedQuality(quality)}
+            type="button"
           >
             {quality}
           </button>
