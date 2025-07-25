@@ -19,8 +19,8 @@ const index = () => {
       if (!id || typeof id !== "string") return;
       try {
         const res = await axiosInstance.get("/video/getall");
-        const selectedVideo = res.data?.find((vid: any) => vid._id === id);
-        setVideo(selectedVideo);
+        const selectedVideo = res.data?.filter((vid: any) => vid._id === id);
+        setVideo(selectedVideo[0]);
         setVideos(res.data);
       } catch (error) {
         console.log(error);
