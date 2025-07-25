@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect} from "react";
+import { useRef, useEffect } from "react";
 
 interface VideoPlayerProps {
   video: {
@@ -28,7 +28,6 @@ export default function VideoPlayer({ video }: VideoPlayerProps) {
         />
         Your browser does not support the video tag.
       </video>
-      
     </div>
   );
 }
