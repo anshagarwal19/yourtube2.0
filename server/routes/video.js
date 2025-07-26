@@ -51,12 +51,16 @@ router.post("/upload", upload.single("video"), async (req, res) => {
 
     await Promise.all(promises);
 
-    // Save metadata to database
+    // Save metadata to database with required fields matching the video model schema
     const videoDoc = new VideoModel({
-      originalName: req.file.originalname,
-      fileName,
+      videotitle: req.body.videotitle || fileName,
+      filename: req.file.originalname,
+      filetype: req.file.mimetype,
+      filepath: outputDir,
+      filesize: req.file.size.toString(),
       resolutions: resolutionsPaths, // [{ resolution: "320p", path: "..." }, ...]
-      uploadDate: new Date()
+      videochanel: req.body.videochanel || "default_channel",
+      uploader: req.body.uploader || "anonymous",
     });
 
     await videoDoc.save();

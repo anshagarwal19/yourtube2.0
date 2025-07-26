@@ -1,5 +1,4 @@
 import video from "../Modals/video.js";
-import Resolution from "../Modals/resolution.js";
 import ffmpeg from "../utils/ffmpeg.js";
 import fs from "fs";
 import path from "path";
