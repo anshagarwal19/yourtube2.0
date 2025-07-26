@@ -56,9 +56,9 @@ export const uploadvideo = async (req, res) => {
       filepath: req.file.path,
       filetype: req.file.mimetype,
       filesize: req.file.size.toString(),
+      resolutions: resolutionsPaths,
       videochanel: req.body.videochanel,
       uploader: req.body.uploader,
-      resolutions: resolutionsPaths,
     });
 
     await newVideo.save();
