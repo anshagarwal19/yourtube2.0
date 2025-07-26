@@ -53,7 +53,7 @@ export const uploadvideo = async (req, res) => {
     const newVideo = new video({
       videotitle: req.body.videotitle,
       filename: req.file.originalname,
-      filepath: req.file.path,
+      filepath: outputDir,
       filetype: req.file.mimetype,
       filesize: req.file.size.toString(),
       resolutions: resolutionsPaths,
