@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import ffmpeg from "../utils/ffmpeg.js";
 import { getallvideo } from "../controllers/video.js";
+import VideoModel from "../models/Video.js";
 
 const router = express.Router();
 
@@ -26,8 +27,11 @@ router.post("/upload", upload.single("video"), async (req, res) => {
   }
 
   try {
+    const resolutionsPaths = [];
+
     const promises = resolutions.map(({ name, width, height }) => {
       const outputPath = `${outputDir}/${name}.mp4`;
+      resolutionsPaths.push({ resolution: name, path: outputPath });
 
       return new Promise((resolve, reject) => {
         ffmpeg(inputPath)
@@ -44,13 +48,27 @@ router.post("/upload", upload.single("video"), async (req, res) => {
 
     await Promise.all(promises);
 
-    res.json({ success: true, message: "Video transcoded successfully", resolutions });
+    // Save metadata to database
+    const videoDoc = new VideoModel({
+      originalName: req.file.originalname,
+      fileName,
+      resolutions: resolutionsPaths, // [{ resolution: "320p", path: "..." }, ...]
+      uploadDate: new Date()
+    });
+
+    await videoDoc.save();
+
+    res.json({
+      success: true,
+      message: "Video transcoded and saved to DB successfully",
+      resolutions: resolutionsPaths,
+    });
+
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Transcoding failed" });
+    res.status(500).json({ error: "Transcoding or DB save failed" });
   }
 });
-
 // Get all videos (you can customize this logic)
 router.get("/getall", getallvideo);
 

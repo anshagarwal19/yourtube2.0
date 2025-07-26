@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 });
 app.use(bodyParser.json());
 app.use("/user", userroutes);
-app.use('/videos', express.static('videos'));
+app.use("/video", videoroutes);
 app.use("/like", likeroutes);
 app.use("/watch", watchlaterroutes);
 app.use("/history", historyrroutes);
