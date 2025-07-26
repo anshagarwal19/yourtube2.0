@@ -1,24 +1,9 @@
-import mongoose from "mongoose";
-const resolutionSchema = new mongoose.Schema({
-  resolution: String,
-  path: String,
-});
-const videochema = mongoose.Schema(
-  {
-    videotitle: { type: String, required: true },
-    filename: { type: String, required: true },
-    filetype: { type: String, required: true },
-    filepath: { type: String, required: true },
-    filesize: { type: String, required: true },
-    resolutions: [resolutionSchema],
-    videochanel: { type: String, required: true },
-    Like: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
-    uploader: { type: String },
-  },
-  {
-    timestamps: true,
-  }
-);
+import express from "express";
+import { getallvideo, uploadvideo } from "../controllers/video.js";
+import upload from "../filehelper/filehelper.js";
 
-export default mongoose.model("videofiles", videochema);
+const routes = express.Router();
+
+routes.post("/upload", upload.single("file"), uploadvideo);
+routes.get("/getall", getallvideo);
+export default routes;
