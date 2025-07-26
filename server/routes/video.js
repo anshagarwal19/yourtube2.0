@@ -1,4 +1,3 @@
-
 import upload from "../filehelper/filehelper.js";
 import express from "express";
 import fs from "fs";
@@ -29,22 +28,26 @@ router.post("/upload", upload.single("video"), async (req, res) => {
   try {
     const resolutionsPaths = [];
 
-    const promises = resolutions.map(({ name, width, height }) => {
-      const outputPath = `${outputDir}/${name}.mp4`;
-      resolutionsPaths.push({ resolution: name, path: outputPath });
+   const promises = resolutions.map(({ name, width, height }) => {
+  const outputPath = `${outputDir}/${name}.mp4`;
+  resolutionsPaths.push({ resolution: name, path: outputPath });
 
-      return new Promise((resolve, reject) => {
-        ffmpeg(inputPath)
-          .size(`${width}x${height}`)
-          .output(outputPath)
-          .on("end", () => {
-            console.log(`${name} transcoding complete`);
-            resolve();
-          })
-          .on("error", reject)
-          .run();
-      });
-    });
+  return new Promise((resolve, reject) => {
+    ffmpeg(inputPath)
+      .size(`${width}x${height}`)
+      .outputOptions("-y") // force overwrite
+      .output(outputPath)
+      .on("end", () => {
+        console.log(`${name} transcoding complete`);
+        resolve();
+      })
+      .on("error", (err) => {
+        console.error(`Error transcoding ${name}:`, err);
+        reject(err);
+      })
+      .run();
+  });
+});
 
     await Promise.all(promises);
 
