@@ -24,8 +24,8 @@ export const uploadvideo = async (req, res) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Transcode to all resolutions and save Resolution documents
-    const resolutionDocs = [];
+    // Transcode to all resolutions and prepare resolution objects
+    const resolutionObjects = [];
 
     const transcodingTasks = resolutions.map(async ({ name, width, height }) => {
       const outputPath = path.join(outputDir, `${name}.mp4`);
@@ -45,25 +45,23 @@ export const uploadvideo = async (req, res) => {
           .run();
       });
 
-      // Create and save Resolution document
-      const resolutionDoc = new Resolution({
+      // Prepare resolution object for embedding
+      resolutionObjects.push({
         resolution: name,
         path: outputPath,
       });
-      await resolutionDoc.save();
-      resolutionDocs.push(resolutionDoc._id);
     });
 
     await Promise.all(transcodingTasks);
 
-    // Save video data to DB with resolution ObjectIds
+    // Save video data to DB with embedded resolutions
     const newVideo = new video({
       videotitle: req.body.videotitle,
       filename: req.file.originalname,
       filepath: outputDir,
       filetype: req.file.mimetype,
       filesize: req.file.size.toString(),
-      resolutions: resolutionDocs,
+      resolutions: resolutionObjects,
       videochanel: req.body.videochanel,
       uploader: req.body.uploader,
     });
