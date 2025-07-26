@@ -84,7 +84,7 @@ export const uploadvideo = async (req, res) => {
 
 export const getallvideo = async (req, res) => {
   try {
-    const files = await video.find().populate("resolutions");
+    const files = await video.find();
     return res.status(200).send(files);
   } catch (error) {
     console.error(" error:", error);
