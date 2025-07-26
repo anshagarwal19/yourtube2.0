@@ -17,7 +17,7 @@ export const uploadvideo = async (req, res) => {
 
   const inputPath = req.file.path;
   const fileName = path.parse(req.file.filename).name;
-  const outputDir = path.join(process.cwd(), "server", "video", fileName);
+  const outputDir = path.join(process.cwd(), "server", "uploads", fileName);
 
   try {
     if (!fs.existsSync(outputDir)) {
@@ -46,39 +46,39 @@ export const uploadvideo = async (req, res) => {
       });
 
       // Create and save Resolution document
-      const resolutionDoc = new Resolution({
-        resolution: name,
-        path: outputPath,
-      });
-      await resolutionDoc.save();
-      resolutionDocs.push(resolutionDoc._id);
+    const resolutionDoc = new Resolution({
+      resolution: name,
+      path: outputPath,
     });
+    await resolutionDoc.save();
+    resolutionDocs.push(resolutionDoc._id);
+  });
 
-    await Promise.all(transcodingTasks);
+  await Promise.all(transcodingTasks);
 
-    // Save video data to DB with resolution ObjectIds
-    const newVideo = new video({
-      videotitle: req.body.videotitle,
-      filename: req.file.originalname,
-      filepath: outputDir,
-      filetype: req.file.mimetype,
-      filesize: req.file.size.toString(),
-      resolutions: resolutionDocs,
-      videochanel: req.body.videochanel,
-      uploader: req.body.uploader,
-    });
+  // Save video data to DB with resolution ObjectIds
+  const newVideo = new video({
+    videotitle: req.body.videotitle,
+    filename: req.file.originalname,
+    filepath: outputDir,
+    filetype: req.file.mimetype,
+    filesize: req.file.size.toString(),
+    resolutions: resolutionDocs,
+    videochanel: req.body.videochanel,
+    uploader: req.body.uploader,
+  });
 
-    await newVideo.save();
+  await newVideo.save();
 
-    res.status(201).json({
-      message: "Video uploaded and transcoded successfully",
-      video: newVideo,
-    });
+  res.status(201).json({
+    message: "Video uploaded and transcoded successfully",
+    video: newVideo,
+  });
 
-  } catch (error) {
-    console.error("Error during upload and transcoding:", error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
+} catch (error) {
+  console.error("Error during upload and transcoding:", error);
+  res.status(500).json({ message: "Something went wrong" });
+}
 };
 
 

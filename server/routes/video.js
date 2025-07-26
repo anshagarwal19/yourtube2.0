@@ -19,7 +19,7 @@ const resolutions = [
 router.post("/upload", upload.single("video"), async (req, res) => {
   const inputPath = req.file.path;
   const fileName = path.parse(req.file.filename).name;
-  const outputDir = `video/${fileName}`;
+  const outputDir = `uploads/${fileName}`;
 
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
