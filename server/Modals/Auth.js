@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const userschema = mongoose.Schema({
+const userschema = new mongoose.Schema({
   email: { type: String, required: true },
   name: { type: String },
   channelname: { type: String },

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const videochema = mongoose.Schema(
+const videochema = new mongoose.Schema(
   {
     videotitle: { type: String, required: true },
     filename: { type: String, required: true },

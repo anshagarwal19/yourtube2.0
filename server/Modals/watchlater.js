@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const watchlaterschema = mongoose.Schema(
+const watchlaterschema = new mongoose.Schema(
   {
     viewer: {
       type: mongoose.Schema.Types.ObjectId,

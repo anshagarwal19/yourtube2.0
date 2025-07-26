@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const historyschema = mongoose.Schema(
+const historyschema = new mongoose.Schema(
   {
     viewer: {
       type: mongoose.Schema.Types.ObjectId,
