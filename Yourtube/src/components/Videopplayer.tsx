@@ -17,7 +17,7 @@ export default function VideoPlayer({ video }: VideoPlayerProps) {
   const [selectedQuality, setSelectedQuality] = useState("480p");
 
   const getSrc = () => {
-    return `${process.env.BACKEND_URL}/${video.filepath}/${selectedQuality}.mp4`;
+    return `${process.env.BACKEND_URL}/${video?.filepath}/${selectedQuality}.mp4`;
   };
 
   useEffect(() => {
