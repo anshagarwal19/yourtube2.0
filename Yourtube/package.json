@@ -36,7 +36,7 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5",
-    "video.js": "^7.21.3",
+    "video.js": "^7.21.7",
     "videojs-contrib-quality-levels": "^3.0.0",
     "videojs-http-source-selector": "^1.1.6"
   }
