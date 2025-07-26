@@ -9,11 +9,13 @@ import likeroutes from "./routes/like.js";
 import watchlaterroutes from "./routes/watchlater.js";
 import historyrroutes from "./routes/history.js";
 import commentroutes from "./routes/comment.js";
-dotenv.config();
-const app = express();
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+  import videochema from "./Modals/video.js"; // Adjust the path to your model
+
+dotenv.config();
+const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,7 +46,57 @@ mongoose
   .connect(DBURL)
   .then(() => {
     console.log("Mongodb connected");
+    // insertResolution();
+      // run();
+
   })
   .catch((error) => {
     console.log(error);
   });
+
+
+  // const run = async () => {
+  //   try {
+
+  //     const newVideo = new videochema({
+  //       videotitle: "Test Video",
+  //       filename: "test-video.mp4",
+  //       filetype: "video/mp4",
+  //       filepath: "server/video/test-video", // relative path to folder
+  //       filesize: "10485760", // 10MB in bytes
+  //       resolutions: [
+  //         { resolution: "320p", path: "server/video/test-video/320p.mp4" },
+  //         { resolution: "480p", path: "server/video/test-video/480p.mp4" },
+  //         { resolution: "720p", path: "server/video/test-video/720p.mp4" },
+  //         { resolution: "1080p", path: "server/video/test-video/1080p.mp4" },
+  //       ],
+  //       videochanel: "Test Channel",
+  //       uploader: "tester_user_01",
+  //     });
+
+  //     const saved = await newVideo.save();
+  //     console.log("Video document saved:", saved);
+  //   } catch (err) {
+  //     console.error("Error saving video document:", err);
+  //   } finally {
+  //     await mongoose.disconnect();
+  //   }
+  // };
+
+
+// async function insertResolution() {
+//   try {
+//     const exists = await resolutionSchema.findOne({ resolution: "1080p" });
+//     if (!exists) {
+//       await resolutionSchema.create({
+//         resolution: "1080p",
+//         path: "1080p.mp4",
+//       });
+//       console.log("Resolution inserted");
+//     } else {
+//       console.log("Resolution already exists");
+//     }
+//   } catch (err) {
+//     console.error("Error inserting resolution:", err.message);
+//   }
+// }
