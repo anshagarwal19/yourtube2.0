@@ -8,11 +8,27 @@
 // export default ffmpegLib;
 
 // utils/ffmpeg.js
+// import ffmpegLib from "fluent-ffmpeg";
+// import ffmpegPath from "ffmpeg-static";
+// import ffprobePath from "ffprobe-static";
+
+// ffmpegLib.setFfmpegPath(ffmpegPath);
+// ffmpegLib.setFfprobePath(ffprobePath);
+
+// export default ffmpegLib;
+
+
+// utils/ffmpeg.js
 import ffmpegLib from "fluent-ffmpeg";
-import ffmpegPath from "ffmpeg-static";
-import ffprobePath from "ffprobe-static";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+
+const ffmpegPath = require("ffmpeg-static");
+const ffprobePath = require("ffprobe-static");
 
 ffmpegLib.setFfmpegPath(ffmpegPath);
 ffmpegLib.setFfprobePath(ffprobePath);
 
 export default ffmpegLib;
+
