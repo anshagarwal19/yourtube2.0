@@ -73,3 +73,14 @@ export const uploadvideo = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+
+export const getallvideo = async (req, res) => {
+  try {
+    const files = await video.find();
+    return res.status(200).send(files);
+  } catch (error) {
+    console.error(" error:", error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};

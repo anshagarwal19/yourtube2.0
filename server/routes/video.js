@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import ffmpeg from "../utils/ffmpeg.js";
 import { getallvideo } from "../controllers/video.js";
-import VideoModel from "../models/Video.js";
+import VideoModel from "../Modals/video.js";
 
 const router = express.Router();
 
