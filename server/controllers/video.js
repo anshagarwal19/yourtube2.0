@@ -17,7 +17,7 @@ export const uploadvideo = async (req, res) => {
 
   const inputPath = req.file.path;
   const fileName = path.parse(req.file.filename).name;
-  const outputDir = `videos/${fileName}`;
+  const outputDir = `video/${fileName}`;
 
   try {
     if (!fs.existsSync(outputDir)) {
