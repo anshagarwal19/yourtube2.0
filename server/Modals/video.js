@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const resolutionSchema = new mongoose.Schema({
-  resolution: String,
-  path: String,
+  resolution: {type:String, required: true },
+  path: {type:String, required: true },
 });
 const videochema = mongoose.Schema(
   {
