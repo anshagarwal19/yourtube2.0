@@ -1,63 +1,56 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
 
 interface VideoPlayerProps {
   video: {
     _id: string;
     videotitle: string;
-    filepath: string; // Base filepath without resolution, e.g., "videos/video123"
+    filepath: string; // e.g., "videos/video123.m3u8"
   };
 }
 
-const resolutions = ["320p", "480p", "720p", "1080p"];
-
 export default function VideoPlayer({ video }: VideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [selectedQuality, setSelectedQuality] = useState("480p");
-
-  const getSrc = () => {
-    return `${process.env.BACKEND_URL}/${video?.filepath}`;
-  };
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<videojs.Player | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.src = getSrc();
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
-  }, [selectedQuality]);
+    if (!videoRef.current) return;
+
+    playerRef.current = videojs(videoRef.current, {
+      controls: true,
+      responsive: true,
+      fluid: true,
+      autoplay: false,
+      preload: "auto",
+      sources: [
+        {
+          src: `${process.env.BACKEND_URL}/${video.filepath}`,
+          type: "application/x-mpegURL", // for HLS
+        },
+      ],
+    });
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [video.filepath]);
 
   return (
-    <div>
-      <div className="mb-2">
-        <label htmlFor="quality" className="text-sm font-medium text-white mr-2">
-          Quality:
-        </label>
-        <select
-          id="quality"
-          value={selectedQuality}
-          onChange={(e) => setSelectedQuality(e.target.value)}
-          className="px-2 py-1 rounded"
-        >
-          {resolutions.map((res) => (
-            <option key={res} value={res}>
-              {res}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="aspect-video bg-black rounded-lg overflow-hidden">
+    <div className="my-4">
+      <h2 className="text-white text-xl mb-2">{video.videotitle}</h2>
+      <div data-vjs-player className="aspect-video bg-black rounded-lg overflow-hidden">
         <video
           ref={videoRef}
-          className="w-full h-full"
+          className="video-js vjs-default-skin w-full h-full"
           controls
-          poster={`/placeholder.svg?height=480&width=854`}
-        >
-          <source src={getSrc()} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+          playsInline
+        />
       </div>
     </div>
   );
