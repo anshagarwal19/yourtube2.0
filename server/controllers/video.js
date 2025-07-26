@@ -1,4 +1,5 @@
 import video from "../Modals/video.js";
+import Resolution from "../Modals/resolution.js";
 import ffmpeg from "../utils/ffmpeg.js";
 import fs from "fs";
 import path from "path";
@@ -24,14 +25,13 @@ export const uploadvideo = async (req, res) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const resolutionsPaths = [];
+    // Transcode to all resolutions and save Resolution documents
+    const resolutionDocs = [];
 
-    // Transcode to all resolutions
-    const transcodingTasks = resolutions.map(({ name, width, height }) => {
+    const transcodingTasks = resolutions.map(async ({ name, width, height }) => {
       const outputPath = path.join(outputDir, `${name}.mp4`);
-      resolutionsPaths.push({ resolution: name, path: outputPath });
 
-      return new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         ffmpeg(inputPath)
           .size(`${width}x${height}`)
           .output(outputPath)
@@ -45,18 +45,26 @@ export const uploadvideo = async (req, res) => {
           })
           .run();
       });
+
+      // Create and save Resolution document
+      const resolutionDoc = new Resolution({
+        resolution: name,
+        path: outputPath,
+      });
+      await resolutionDoc.save();
+      resolutionDocs.push(resolutionDoc._id);
     });
 
     await Promise.all(transcodingTasks);
 
-    // Save video data to DB
+    // Save video data to DB with resolution ObjectIds
     const newVideo = new video({
       videotitle: req.body.videotitle,
       filename: req.file.originalname,
       filepath: outputDir,
       filetype: req.file.mimetype,
       filesize: req.file.size.toString(),
-      resolutions: resolutionsPaths,
+      resolutions: resolutionDocs,
       videochanel: req.body.videochanel,
       uploader: req.body.uploader,
     });
@@ -77,7 +85,7 @@ export const uploadvideo = async (req, res) => {
 
 export const getallvideo = async (req, res) => {
   try {
-    const files = await video.find();
+    const files = await video.find().populate("resolutions");
     return res.status(200).send(files);
   } catch (error) {
     console.error(" error:", error);
