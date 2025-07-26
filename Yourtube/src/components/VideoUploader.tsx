@@ -54,7 +54,7 @@ const VideoUploader = ({ channelId, channelName }: any) => {
       return;
     }
     const formdata = new FormData();
-    formdata.append("file", videoFile);
+    formdata.append("video", videoFile);
     formdata.append("videotitle", videoTitle);
     formdata.append("videochanel", channelName);
     formdata.append("uploader", channelId);

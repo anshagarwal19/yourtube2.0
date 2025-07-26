@@ -17,7 +17,7 @@ export const uploadvideo = async (req, res) => {
 
   const inputPath = req.file.path;
   const fileName = path.parse(req.file.filename).name;
-  const outputDir = `video/${fileName}`;
+  const outputDir = path.join(process.cwd(), "server", "video", fileName);
 
   try {
     if (!fs.existsSync(outputDir)) {
@@ -28,7 +28,7 @@ export const uploadvideo = async (req, res) => {
 
     // Transcode to all resolutions
     const transcodingTasks = resolutions.map(({ name, width, height }) => {
-      const outputPath = `${outputDir}/${name}.mp4`;
+      const outputPath = path.join(outputDir, `${name}.mp4`);
       resolutionsPaths.push({ resolution: name, path: outputPath });
 
       return new Promise((resolve, reject) => {
