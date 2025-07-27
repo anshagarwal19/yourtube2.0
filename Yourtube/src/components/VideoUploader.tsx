@@ -1,3 +1,4 @@
+
 import { Check, FileVideo, Upload, X } from "lucide-react";
 import React, { ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -54,7 +55,7 @@ const VideoUploader = ({ channelId, channelName }: any) => {
       return;
     }
     const formdata = new FormData();
-    formdata.append("video", videoFile);
+    formdata.append("file", videoFile);
     formdata.append("videotitle", videoTitle);
     formdata.append("videochanel", channelName);
     formdata.append("uploader", channelId);
