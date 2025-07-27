@@ -14,7 +14,7 @@ export default function VideoPlayer({ video }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const getSrc = () => {
-    return `${process.env.BACKEND_URL}/${video?.filepath}`;
+    return `${process.env.BACKEND_URL}/${video?.filepath}.mp4`;
   };
 
   useEffect(() => {
